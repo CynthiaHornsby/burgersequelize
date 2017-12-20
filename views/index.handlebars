@@ -1,0 +1,79 @@
+<h1>Burgers</h1>
+
+<ul>
+    {{#each burgers}} {{#unless devoured}}
+    <li>
+        {{burger_name}}
+        <button class="eat" data-id="{{this.id}}">Eat!</button>
+    </li>
+    <li>{{devoured}}</li>
+    {{/unless}}
+    <br> {{/each}}
+</ul>
+
+<div class="eaten">
+    <h2>Burgers Eaten</h2>
+    <p>
+        {{#each burgers}} {{#if devoured}}
+        <p>{{burger_name}} Eaten</p>
+        {{/if}} {{/each}}
+    </p>
+</div>
+
+
+<form action="/" method="POST" id="submission">
+
+    <input type="textarea" height="500" placeholder="Type in a burger to eat" id="newburger" name="burgername">
+    <button type="submit">Submit</button>
+
+</form>
+
+<script type="text/javascript">
+    $(".eat").on("click", function(event) {
+
+        event.preventDefault();
+        var id = $(this).data("id");
+
+        //var devoured = {
+        //    devoured: true
+        //};
+        console.log(id);
+
+        $.ajax({
+            url: "/",
+            method: "PUT",
+            data: {
+                id: $(this).data("id")
+            }
+
+        }).then(
+
+            function() {
+                console.log("Update " + id);
+                location.reload();
+            }
+        );
+    });
+
+    $("#submission").on("submit", function(event) {
+
+        event.preventDefault();
+
+        var burgerName = {
+            burger_name: $("#newburger").val().trim()
+        };
+        console.log(burgerName);
+        $.ajax({
+            url: "/",
+            method: "POST",
+            data: {
+                burger_name: $("[name=burgername]").val().trim()
+            }
+        }).then(
+
+            function() {
+                console.log("Update burgers");
+                location.reload();
+            });
+    });
+</script>
